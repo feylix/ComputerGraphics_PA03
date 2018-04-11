@@ -2,22 +2,13 @@
 Team: This Variable is yet to be Declared
 Members: Daniel Johnston, Benedikt Reynolds, Rebecca Panitch,
 		Marcus Lee, Zepeng Hu
-PA02: Work with your team to modify the game0 demo from class and
-		make the following changes:
-				- Add key controls "Q" and "E" to rotate the node camera view to the
-					left and right, respectively
-				-	Replace the box node with a Monkey node
-				- Create a NonPlayableCharacter which moves toward the node if
-					the node gets too close
-				- When the NPC hits the node, the node should lose a point of health
-					and the NPC should be teleported to a random positiion on the board
-				- When the node reaches zero health, the game should go to a "you lose"
-					scene, which the player can restart with the "R" key
-				- Add a start screen, where the user can initatie play by hitting the "P"
-					key
-				- Each member of the team should also add at least one additional feature
-					to the game
+
+PA02: Work with your team to create an MVP of a game.
+		We decided to create a MVP of the game SNAKE. Tradionally found
+		on old cellular phones.
+
 BUGS:
+
 */
 
 	var scene, renderer;  // all threejs programs need these
@@ -66,7 +57,8 @@ BUGS:
 		endCamera.position.set(0,50,1);
 		endCamera.lookAt(0,0,0);
 	}
-	function createMidScene(){
+
+	function createMidScene() {
 		midScene = initScene();
 		var geometry = new THREE.PlaneGeometry( 1600, 925, 128 );
 		var texture = new THREE.TextureLoader().load( '../images/hearts.jpg' );
@@ -184,15 +176,50 @@ BUGS:
 			addBalls();
 			addDoomBalls();
 
-			//npc = createBoxMesh2(0x0000ff,1,2,4);
-			//npc.position.set(30,5,-30);
-			//scene.add(npc);
-			//console.dir(npc);
-			//playGameMusic();
+			npc = createSphereMesh();
+			npc.position.set(randN(30), randN(30), randN(30));
+			scene.add(npc);
+	}
 
-			//goldenSnitch = createSphereMesh();
-			//goldenSnitch.position.set(16, 5, -30);
-			//scene.add(goldenSnitch);
+	function createSphereMesh() {
+		var geometry = new THREE.SphereGeometry( 1, 16, 16);
+		var material = new THREE.MeshLambertMaterial( { color: 0xFF69B4} );
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.95);
+			var mesh = new Physijs.BoxMesh( geometry, material );
+		mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
+		return mesh;
+	}
+
+	function updateNPC() {
+		npc.lookAt(nodes[1].position);
+
+		npc.addEventListener( 'collision',
+			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+				for (let i = 0; i < nodes.length; i++) {
+					if(other_object == nodes[i]) {
+						gameState.lives--;
+						this.position.set(0,-100,0);
+						this.__dirtyPosition = true;
+						gameState.scene = 'lifelost';
+						if (gameState.lives == 0){
+							gameState.scene = 'youlose';
+						}
+					}
+				}
+			}
+		);
+
+	  var dis = Math.sqrt(Math.pow((nodes[1].position.x - npc.position.x),2) + Math.pow((nodes[1].position.y - npc.position.y),2) + Math.pow((nodes[1].position.z - npc.position.z),2));
+	  if (dis <= 30) {
+			npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(5));
+	  }
+	  if (controls.npc) {
+	    controls.npc = false;
+	    npc.__dirtyPosition = true;
+	        npc.position.set(randN(30),5,randN(30));
+	    npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(0));
+	  }
 	}
 
 	function randN(n) {
@@ -210,7 +237,6 @@ BUGS:
 	}
 
 	function addDoomBalls() {
-
 		for(i=0;i<numDoomBalls;i++) {
 			var ball = createDoomBall();
 			ball.position.set(randN(100)-50,15,randN(100)-50);
@@ -690,7 +716,7 @@ BUGS:
 				break;
 
 			case "main":
-
+				updateNPC();
 				updatenode();
 				updateS();
         		edgeCam.lookAt(node.position);
