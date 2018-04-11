@@ -176,9 +176,9 @@ BUGS:
 			addBalls();
 			addDoomBalls();
 
-			npc = createSphereMesh();
-			npc.position.set(randN(30), randN(30), randN(30));
-			scene.add(npc);
+			//npc = createSphereMesh();
+			//npc.position.set(randN(30), 0, randN(30));
+			//scene.add(npc);
 	}
 
 	function createSphereMesh() {
@@ -191,6 +191,7 @@ BUGS:
 		return mesh;
 	}
 
+/*
 	function updateNPC() {
 		npc.lookAt(nodes[1].position);
 
@@ -198,7 +199,6 @@ BUGS:
 			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				for (let i = 0; i < nodes.length; i++) {
 					if(other_object == nodes[i]) {
-						gameState.lives--;
 						this.position.set(0,-100,0);
 						this.__dirtyPosition = true;
 						gameState.scene = 'lifelost';
@@ -207,6 +207,7 @@ BUGS:
 						}
 					}
 				}
+				gameState.lives--;
 			}
 		);
 
@@ -221,6 +222,7 @@ BUGS:
 	    npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(0));
 	  }
 	}
+	*/
 
 	function randN(n) {
 		return Math.random()*n;
@@ -716,7 +718,7 @@ BUGS:
 				break;
 
 			case "main":
-				updateNPC();
+				//updateNPC();
 				updatenode();
 				updateS();
         		edgeCam.lookAt(node.position);
