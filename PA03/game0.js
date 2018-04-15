@@ -14,9 +14,8 @@ BUGS:
 	var scene, renderer;  // all threejs programs need these
 	var camera, nodeCam, edgeCam, upperCam;  // we have two cameras in the main scene
 	var node;
-	var index = [];
-	var nodes = [];
-	var head;
+	var index = [];//this is the index that stores the position of each node
+	var nodes = [];// this is the actual objects of nodes
 	var balls = [];
 	var numBalls = 3;
 	var numDoomBalls = 3;
@@ -383,7 +382,7 @@ BUGS:
 		let tmp = new Physijs.SphereMesh( geometry, pmaterial );
 		tmp.setDamping(0.1,0.1);
 		tmp.castShadow = true;
-		if (i > 2)//prevent the second node hit the head; DO NOT DELETE!
+		if (i > 3)//prevent the second node hit the head; DO NOT DELETE!
 		tmp.addEventListener( 'collision',
 			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				if(other_object==node){
@@ -510,11 +509,19 @@ BUGS:
 			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				for (let i = 0; i < nodes.length; i++) {
 					if(other_object==nodes[i]){
+						var tmp = createnode(nodes.length);
+						tmp.position.set(nodes[nodes.length - 1].position.x,
+														 1,
+														 nodes[nodes.length - 1].position.z);// this will throw exception is the length of thesnake is less than 3
+						nodes.push(tmp);
+						index.push({x:tmp.position.x,y:tmp.position.y,z:tmp.position.z});
+						scene.add(tmp);
 					console.log("hit a ball!");
 					this.position.set(0,-100,0);
 					this.__dirtyPosition = true;
 					gameState.score++;
 					numBalls = 1;
+
 					addBalls();
 					if (gameState.score==7){
 						gameState.scene = 'youwon';
@@ -570,18 +577,6 @@ BUGS:
 		//console.dir(event);
 		// first we handle the "play again" key in the "youwon" scene
 		if (gameState.scene == 'youwon' && event.key=='r') {
-			gameState.scene = 'main';
-			gameState.score = 0;
-			gameState.lives = 3;
-			gameState.health = 10;
-			controls.speed=20;
-			//addBalls();
-			//addHealthBalls();
-			//addDeathBalls();
-			return;
-		}
-		if (gameState.scene == 'youlose' && event.key=='r') {
-			gameState.scene = 'main';
 			scene = initScene();
 			index = [];
 			nodes = [];
@@ -590,6 +585,19 @@ BUGS:
 			gameState.lives = 3;
 			gameState.score = 0;
 			controls.speed=20;
+			gameState.scene = 'main';
+			return;
+		}
+		if (gameState.scene == 'youlose' && event.key=='r') {
+			scene = initScene();
+			index = [];
+			nodes = [];
+			createMainScene();
+			gameState.health = 10;
+			gameState.lives = 3;
+			gameState.score = 0;
+			controls.speed=20;
+			gameState.scene = 'main';
 			return;
 		}
 		if (gameState.scene =='lifelost' && event.key =='c'){
