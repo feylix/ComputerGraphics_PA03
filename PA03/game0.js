@@ -2,13 +2,10 @@
 Team: This Variable is yet to be Declared
 Members: Daniel Johnston, Benedikt Reynolds, Rebecca Panitch,
 		Marcus Lee, Zepeng Hu
-
 PA02: Work with your team to create an MVP of a game.
 		We decided to create a MVP of the game SNAKE. Tradionally found
 		on old cellular phones.
-
 BUGS:
-
 */
 
 	var scene, renderer;  // all threejs programs need these
@@ -19,6 +16,7 @@ BUGS:
 	var balls = [];
 	var numBalls = 3;
 	var numDoomBalls = 3;
+	var enemyBall;
 
 	// here are some mesh objects ...
 	//var cone;
@@ -31,7 +29,7 @@ BUGS:
 
 	var controls =
 	     {fwd:true, bwd:false, left:false, right:false,
-				speed:10, reset:false, rleft:false,
+				speed:20, reset:false, rleft:false,
 				rright:false, start:false, hit:false, npc:false, goldenSnitch:false,
 		    camera:camera}
 
@@ -174,6 +172,7 @@ BUGS:
 
 			addBalls();
 			addDoomBalls();
+			addBouncingEnemyBall();
 
 			//npc = createSphereMesh();
 			//npc.position.set(randN(30), 0, randN(30));
@@ -193,7 +192,6 @@ BUGS:
 /*
 	function updateNPC() {
 		npc.lookAt(nodes[1].position);
-
 		npc.addEventListener( 'collision',
 			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				for (let i = 0; i < nodes.length; i++) {
@@ -209,7 +207,6 @@ BUGS:
 				gameState.lives--;
 			}
 		);
-
 	  var dis = Math.sqrt(Math.pow((nodes[1].position.x - npc.position.x),2) + Math.pow((nodes[1].position.y - npc.position.y),2) + Math.pow((nodes[1].position.z - npc.position.z),2));
 	  if (dis <= 30) {
 			npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(5));
@@ -244,6 +241,13 @@ BUGS:
 			scene.add(ball);
 			balls.push(ball);
 		}
+	}
+
+	function addBouncingEnemyBall() {
+			enemyBall = createBouncingEnemyBall();
+			enemyBall.position.set(randN(100)-50,75,randN(100)-50);
+			scene.add(enemyBall);
+			balls.push(enemyBall);
 	}
 
 
@@ -346,7 +350,7 @@ BUGS:
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 15, 15 );
 		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
-		var pmaterial = new Physijs.createMaterial(material,0.9,0.05);
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 		//var mesh = new THREE.Mesh( geometry, material );
 		var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
 
@@ -501,7 +505,7 @@ BUGS:
 	function createBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
 		var material = new THREE.MeshLambertMaterial( { color: 0xffff00} );
-		var pmaterial = new Physijs.createMaterial(material,0.9,0.95);
+		var pmaterial = new Physijs.createMaterial(material,0.9,0);
     	var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
 		mesh.setDamping(0.1,0.1);
 		mesh.castShadow = true;
@@ -536,7 +540,7 @@ BUGS:
 	function createDoomBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
 		var material = new THREE.MeshLambertMaterial( { color: 0x0000ff} );
-		var pmaterial = new Physijs.createMaterial(material,0.9,0.95);
+		var pmaterial = new Physijs.createMaterial(material,0.9,0);
 			var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
 		mesh.setDamping(0.1,0.1);
 		mesh.castShadow = true;
@@ -558,6 +562,45 @@ BUGS:
 		}
 		);
 		return mesh;
+	}
+
+	function createBouncingEnemyBall() {
+		var geometry = new THREE.SphereGeometry( 3, 16, 16);
+		var material = new THREE.MeshLambertMaterial( { color: 0x00ff00});
+		var pmaterial = new Physijs.createMaterial(material,0.9,0.95);
+			var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
+		mesh.setDamping(0.1,0.1);
+		mesh.castShadow = true;
+		mesh.addEventListener( 'collision',
+			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+				for (let i = 0; i < nodes.length; i++) {
+					if(other_object==nodes[i]){
+					console.log("checkmate");
+					this.position.set(0,-100,0);
+					this.__dirtyPosition = true;
+					gameState.lives--;
+					gameState.scene = 'lifelost';
+					if (gameState.lives==0){
+						gameState.scene = 'youlose';
+					}
+					addBouncingEnemyBall();
+				}
+			}
+		}
+		);
+		return mesh;
+	}
+
+	function updateBouncingEnemyBall(){
+		enemyBall.lookAt(node.position);
+		var dis = Math.sqrt(Math.pow((node.position.x - enemyBall.position.x),2) + Math.pow((node.position.y - enemyBall.position.y),2) + Math.pow((node.position.z - enemyBall.position.z),2));
+		enemyBall.setLinearVelocity(enemyBall.getWorldDirection().multiplyScalar(5));
+		if (controls.enemyBall) {
+			controls.enemyBall = false;
+			enemyBall.__dirtyPosition = true;
+      		enemyBall.position.set(randN(30),5,randN(30));
+			enemyBall.setLinearVelocity(enemyBall.getWorldDirection().multiplyScalar(0));
+		}
 	}
 
 	var clock;
@@ -734,6 +777,7 @@ BUGS:
 				if (gameState.camera!= 'none'){
 					renderer.render( scene, gameState.camera );
 				}
+				updateBouncingEnemyBall();
 				break;
 
 			default:
