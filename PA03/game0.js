@@ -235,7 +235,7 @@ BUGS:
 	}
 
 	function addDoomBalls() {
-		for(i=0;i<numDoomBalls;i++) {
+		for(let i=0;i<numDoomBalls;i++) {
 			var ball = createDoomBall();
 			ball.position.set(randN(100)-50,15,randN(100)-50);
 			scene.add(ball);
@@ -379,7 +379,10 @@ BUGS:
 		// we need to rotate the mesh 90 degrees to make it horizontal not vertical
 	}
 
-	function createnode(i) {
+	function createnode(i,b) {
+		if (b)
+		var material = new THREE.MeshLambertMaterial( { color: Math.random()*10000000} );
+		else
 		var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
 		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
 		var geometry = new THREE.SphereGeometry(1,10,10);
@@ -427,8 +430,8 @@ BUGS:
 	}
 
 	function createS() {
-		for (i = 0; i < 15; i++) {
-			let tmp = createnode(i);
+		for (i = 0; i < 6; i++) {
+			let tmp = createnode(i,false);
 			tmp.position.set(0,1,-2.25*i);
 			scene.add(tmp);
 			index.push({x: tmp.position.x,
@@ -513,7 +516,7 @@ BUGS:
 			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				for (let i = 0; i < nodes.length; i++) {
 					if(other_object==nodes[i]){
-						var tmp = createnode(nodes.length);
+						var tmp = createnode(nodes.length,true);
 						tmp.position.set(nodes[nodes.length - 1].position.x,
 														 1,
 														 nodes[nodes.length - 1].position.z);// this will throw exception is the length of thesnake is less than 3
@@ -527,7 +530,7 @@ BUGS:
 					numBalls = 1;
 
 					addBalls();
-					if (gameState.score==7){
+					if (gameState.score==10){
 						gameState.scene = 'youwon';
 					}
 				}
@@ -575,7 +578,6 @@ BUGS:
 			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				for (let i = 0; i < nodes.length; i++) {
 					if(other_object==nodes[i]){
-					console.log("checkmate");
 					this.position.set(0,-100,0);
 					this.__dirtyPosition = true;
 					gameState.lives--;
@@ -623,6 +625,7 @@ BUGS:
 			scene = initScene();
 			index = [];
 			nodes = [];
+			numBalls = 3;
 			createMainScene();
 			gameState.health = 10;
 			gameState.lives = 3;
@@ -649,6 +652,7 @@ BUGS:
 			index =[];
 			nodes =[];
 			controls.speed=20;
+			numBalls = 3;
 			createMainScene();
 			return;
 
