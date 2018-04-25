@@ -43,7 +43,17 @@ BUGS:
 
 	function createStartScene() {
 		startScene = initScene();
-		endText = createSkyBox('wood.jpg',10);
+		var geometry = new THREE.PlaneGeometry( 1000, 1000, 0 );
+		var texture = new THREE.TextureLoader().load( '../images/startSnake.jpeg' );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
+		var mesh = new THREE.Mesh( geometry, material, 0 );
+		mesh.position.z-=000;
+		mesh.position.y-=400;
+		mesh.rotateX(-Math.PI/2);
+		endText = mesh;
 
 		//endText.rotateX(Math.PI);
 		startScene.add(endText);
@@ -51,14 +61,14 @@ BUGS:
 		light1.position.set(0,200,20);
 		startScene.add(light1);
 		endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		endCamera.position.set(0,50,1);
+		endCamera.position.set(0,50,0);
 		endCamera.lookAt(0,0,0);
 	}
 
 	function createMidScene() {
 		midScene = initScene();
-		var geometry = new THREE.PlaneGeometry( 1600, 925, 128 );
-		var texture = new THREE.TextureLoader().load( '../images/hearts.jpg' );
+		var geometry = new THREE.PlaneGeometry( 1000, 1000, 0 );
+		var texture = new THREE.TextureLoader().load( '../images/lifeLost.jpeg' );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 1, 1 );
@@ -74,14 +84,14 @@ BUGS:
 		light1.position.set(0,200,20);
 		midScene.add(light1);
 		endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		endCamera.position.set(0,50,1);
+		endCamera.position.set(0,50,0);
 		endCamera.lookAt(0,0,0);
 	}
 
 	function createLoseScene() {
 		loseScene = initScene();
-		var geometry = new THREE.PlaneGeometry( 1600, 925, 128 );
-		var texture = new THREE.TextureLoader().load( '../images/loser.png' );
+		var geometry = new THREE.PlaneGeometry( 1000, 1000, 0 );
+		var texture = new THREE.TextureLoader().load( '../images/youLose.jpeg' );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 1, 1 );
@@ -100,9 +110,20 @@ BUGS:
 		endCamera.lookAt(0,0,0);
 	}
 
+
 	function createEndScene() {
 		endScene = initScene();
-		endText = createSkyBox('youwon.png',10);
+		var geometry = new THREE.PlaneGeometry( 1000, 1000, 0 );
+		var texture = new THREE.TextureLoader().load( '../images/end.jpeg' );
+		texture.wrapS = THREE.RepeatWrapping;
+		texture.wrapT = THREE.RepeatWrapping;
+		texture.repeat.set( 1, 1 );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
+		var mesh = new THREE.Mesh( geometry, material, 0 );
+		mesh.position.z-=000;
+		mesh.position.y-=400;
+		mesh.rotateX(-Math.PI/2);
+		endText = mesh;
 
 		//endText.rotateX(Math.PI);
 		endScene.add(endText);
@@ -110,7 +131,7 @@ BUGS:
 		light1.position.set(0,200,20);
 		endScene.add(light1);
 		endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
-		endCamera.position.set(0,50,1);
+		endCamera.position.set(0,50,0);
 		endCamera.lookAt(0,0,0);
 	}
 
@@ -140,7 +161,7 @@ BUGS:
 			camera.lookAt(0,0,0);
 
 			// create the ground and the skybox
-			var ground = createGround('grass.png');
+			var ground = createGround('stone.jpg');
 			scene.add(ground);
 			var skybox = createSkyBox('sky.jpg',1);
 			scene.add(skybox);
@@ -507,7 +528,7 @@ BUGS:
 
 	function createBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
-		var material = new THREE.MeshLambertMaterial( { color: 0xffff00} );
+		var material = new THREE.MeshLambertMaterial( { color: 0x0000ff} );
 		var pmaterial = new Physijs.createMaterial(material,0.9,0);
     	var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
 		mesh.setDamping(0.1,0.1);
@@ -542,7 +563,7 @@ BUGS:
 
 	function createDoomBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
-		var material = new THREE.MeshLambertMaterial( { color: 0x0000ff} );
+		var material = new THREE.MeshLambertMaterial( { color: 0xff0000} );
 		var pmaterial = new Physijs.createMaterial(material,0.9,0);
 			var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
 		mesh.setDamping(0.1,0.1);
@@ -569,7 +590,7 @@ BUGS:
 
 	function createBouncingEnemyBall() {
 		var geometry = new THREE.SphereGeometry( 3, 16, 16);
-		var material = new THREE.MeshLambertMaterial( { color: 0x00ff00});
+		var material = new THREE.MeshLambertMaterial( { color: 0xff00ff});
 		var pmaterial = new Physijs.createMaterial(material,0.9,0.95);
 			var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
 		mesh.setDamping(0.1,0.1);
@@ -672,7 +693,7 @@ BUGS:
 			//increase and decrease speed of snake
 			case "m": controls.speed = 30; break;
 			case "n": if (controls.speed >10){ controls.speed = 10}; break;
-      		case "h": controls.reset = true; break;
+      case "h": controls.reset = true; break;
 
 			case "q": controls.rleft = true; break;
 			case "e": controls.rright = true; break;
@@ -683,7 +704,7 @@ BUGS:
 			// switch cameras
 			case "1": gameState.camera = camera; break;
 			case "2": gameState.camera = nodeCam; break;
-      		case "3": gameState.camera = edgeCam; break;
+      case "3": gameState.camera = edgeCam; break;
 			case "4": gameState.camera = upperCam; break;
 
 			// move the camera around, relative to the node
@@ -794,30 +815,30 @@ BUGS:
 			info.innerHTML='<div style="font-size:24pt">Score: '
 	    + gameState.score
 	    + " Lives="+gameState.lives
-			+ '     Press p to play'
+			+ '     Press "P" to Play'
 	    + '</div>';
 	}
 	else if(gameState.scene=='youlose' || gameState.scene=='youwon'){
 		var info = document.getElementById("info");
 			info.innerHTML='<div style="font-size:24pt">Score: '
 	    + gameState.score
-	    + " Lives="+gameState.lives
-			+ '     Press r to restart'
+	    + " Lives = "+gameState.lives
+			+ '     Press "R" to Restart'
 	    + '</div>';
 	}
 	else if(gameState.scene =='lifelost'){
 		var info = document.getElementById("info");
 			info.innerHTML='<div style="font-size:24pt">Score: '
 	    + gameState.score
-	    + " Lives="+gameState.lives
-			+ '     Lost a life. Press c to continue'
+	    + " Lives = "+gameState.lives
+			+ '     Life Lost. Press "C" to Continue'
 	    + '</div>';
 	}
 	else{
 		var info = document.getElementById("info");
 		info.innerHTML='<div style="font-size:24pt">Score: '
 		+ gameState.score
-		+ " Lives="+gameState.lives
+		+ " Lives = "+gameState.lives
 		+ '</div>';
 	}
 }
