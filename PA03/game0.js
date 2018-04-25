@@ -1,11 +1,13 @@
 /*
 Team: This Variable is yet to be Declared
-Members: Daniel Johnston, Benedikt Reynolds, Rebecca Panitch,
-		Marcus Lee, Zepeng Hu
-PA02: Work with your team to create an MVP of a game.
+Members: Rebecca Panitch, Daniel Johnston
+		Marcus Lee, Zepeng Hu, and Benedikt Reynolds
+Final Project: Work with your team to create an MVP of a game.
 		We decided to create a MVP of the game SNAKE. Tradionally found
 		on old cellular phones.
+
 BUGS:
+
 */
 
 	var scene, renderer;  // all threejs programs need these
@@ -17,12 +19,6 @@ BUGS:
 	var numBalls = 3;
 	var numDoomBalls = 3;
 	var enemyBall;
-
-	// here are some mesh objects ...
-	//var cone;
-	//var torus;
-	//var npc;
-	//var goldenSnitch; //actually hot pink
 
 	var endScene, endCamera, endText;
 	var loseScene, startScene, midScene;
@@ -58,7 +54,7 @@ BUGS:
 		//endText.rotateX(Math.PI);
 		startScene.add(endText);
 		var light1 = createPointLight();
-		light1.position.set(0,200,20);
+		light1.position.set(0,1000,20);
 		startScene.add(light1);
 		endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		endCamera.position.set(0,50,0);
@@ -81,7 +77,7 @@ BUGS:
 		//endText.rotateX(Math.PI);
 		midScene.add(endText);
 		var light1 = createPointLight();
-		light1.position.set(0,200,20);
+		light1.position.set(0,1000,20);
 		midScene.add(light1);
 		endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		endCamera.position.set(0,50,0);
@@ -103,7 +99,7 @@ BUGS:
 		endText = mesh;
 		loseScene.add(endText);
 		var light1 = createPointLight();
-		light1.position.set(0,200,20);
+		light1.position.set(0,1000,20);
 		loseScene.add(light1);
 		endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		endCamera.position.set(0,50,1);
@@ -128,7 +124,7 @@ BUGS:
 		//endText.rotateX(Math.PI);
 		endScene.add(endText);
 		var light1 = createPointLight();
-		light1.position.set(0,200,20);
+		light1.position.set(0,1000,20);
 		endScene.add(light1);
 		endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
 		endCamera.position.set(0,50,0);
@@ -166,20 +162,18 @@ BUGS:
 			var skybox = createSkyBox('sky.jpg',1);
 			scene.add(skybox);
 
-			// create the node
+			// create the snake
 			nodeCam = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 0.1, 1000 );
 			upperCam = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
 			createS();
 			gameState.camera = camera;
 
-      		edgeCam = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 0.1, 1000 );
-      		edgeCam.position.set(20,20,10);
+      edgeCam = new THREE.PerspectiveCamera( 120, window.innerWidth / window.innerHeight, 0.1, 1000 );
+      edgeCam.position.set(20,20,10);
 
 			//addBalls();
 			//addHealthBalls();
 			//addDeathBalls();
-
-
 
 			torus = createTorus();
 			torus.position.set(0,0,0);
@@ -592,7 +586,7 @@ BUGS:
 		var geometry = new THREE.SphereGeometry( 3, 16, 16);
 		var material = new THREE.MeshLambertMaterial( { color: 0xff00ff});
 		var pmaterial = new Physijs.createMaterial(material,0.9,0.95);
-			var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
+		var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
 		mesh.setDamping(0.1,0.1);
 		mesh.castShadow = true;
 		mesh.addEventListener( 'collision',
@@ -703,9 +697,9 @@ BUGS:
 
 			// switch cameras
 			case "1": gameState.camera = camera; break;
-			case "2": gameState.camera = nodeCam; break;
-      case "3": gameState.camera = edgeCam; break;
-			case "4": gameState.camera = upperCam; break;
+			case "2": gameState.camera = edgeCam; break;
+      case "3": gameState.camera = upperCam; break;
+			case "4": gameState.camera = nodeCam; break;
 
 			// move the camera around, relative to the node
 			case "ArrowLeft": nodeCam.translateY(1);break;
