@@ -396,7 +396,7 @@ BUGS:
 
 	function createnode(i,b) {
 		if (b)
-		var material = new THREE.MeshLambertMaterial( { color: Math.random()*10000000} );
+		var material = new THREE.MeshLambertMaterial( { color: Math.random()*16000000} );
 		else
 		var material = new THREE.MeshLambertMaterial( { color: 0x00ff00 } );
 		var pmaterial = new Physijs.createMaterial(material,0.9,0.5);
@@ -522,7 +522,7 @@ BUGS:
 
 	function createBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
-		var material = new THREE.MeshLambertMaterial( { color: 0x0000ff} );
+		var material = new THREE.MeshLambertMaterial( { color: 0x00ffff} );
 		var pmaterial = new Physijs.createMaterial(material,0.9,0);
     	var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0.01 );
 		mesh.setDamping(0.1,0.1);
