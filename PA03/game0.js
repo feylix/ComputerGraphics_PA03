@@ -603,6 +603,7 @@ BUGS:
 					}
 					addBouncingEnemyBall();
 				}
+				break;
 			}
 		}
 		);
