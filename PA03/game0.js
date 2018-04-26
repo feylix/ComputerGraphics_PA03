@@ -40,7 +40,7 @@ BUGS:
 	function createStartScene() {
 		startScene = initScene();
 		var geometry = new THREE.PlaneGeometry( 1000, 1000, 0 );
-		var texture = new THREE.TextureLoader().load( '../images/startSnake.jpeg' );
+		var texture = new THREE.TextureLoader().load( '../images/sSnake.jpeg' );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 1, 1 );
