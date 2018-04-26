@@ -796,6 +796,9 @@ BUGS:
 				if (gameState.camera!= 'none'){
 					renderer.render( scene, gameState.camera );
 				}
+				if(gameState.lives<=0){
+					gameState.scene = 'youlose';
+				}
 				updateBouncingEnemyBall();
 				break;
 
